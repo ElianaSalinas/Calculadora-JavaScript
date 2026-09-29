@@ -1,0 +1,99 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  }
+
+body {
+font-family: Arial, sans-serif;
+background: #F1F8F4;
+min-height: 100vh;
+display: flex;
+justify-content: center;
+align-items: center;
+}
+
+.calculadora {
+width: 330px;
+background: #1D4737;
+padding: 20px;
+border-radius: 25px;
+box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+}
+
+.pantalla {
+background: #16352A;
+min-height: 100px;
+border-radius: 15px;
+margin-bottom: 20px;
+padding: 15px;
+display: flex;
+flex-direction: column;
+justify-content: flex-end;
+align-items: flex-end;
+overflow: hidden;
+}
+
+#operacion {
+color: #999;
+font-size: 16px;
+min-height: 25px;
+}
+
+#resultado {
+color: white;
+font-size: 38px;
+font-weight: bold;
+word-break: break-all;
+}
+
+.botones {
+display: grid;
+grid-template-columns: repeat(4, 1fr);
+gap: 10px;
+}
+
+button {
+border: none;
+height: 60px;
+border-radius: 15px;
+font-size: 20px;
+font-weight: bold;
+cursor: pointer;
+background: #286B4F;
+color: white;
+transition: 0.15s;
+}
+
+button:hover {
+transform: scale(1.04);
+}
+
+.numero {
+background: #222d28;
+}
+
+.operador {
+background: #176e4a;
+}
+/*  */
+.operador:hover {
+background: #2ebb7b;
+}
+
+.especial {
+background: #0e311b;
+}
+
+#igual {
+background: #1aa363;
+}
+
+#igual:hover {
+background:#63D49A;
+}
+
+#cambiarSigno,
+#decimal {
+background: #32754d;
+}

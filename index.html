@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="calculadora">
+
+    <div class="pantalla">
+        <div id="operacion"></div>
+        <div id="resultado">0</div>
+    </div>
+
+    <div class="botones">
+
+        <button id="limpiar">AC</button>
+        <button id="borrar">⌫</button>
+        <button class="operador" data-operador="%">%</button>
+        <button class="operador" data-operador="/">÷</button>
+
+        <button class="numero">7</button>
+        <button class="numero">8</button>
+        <button class="numero">9</button>
+        <button class="operador" data-operador="*">×</button>
+
+        <button class="numero">4</button>
+        <button class="numero">5</button>
+        <button class="numero">6</button>
+        <button class="operador" data-operador="-">−</button>
+
+        <button class="numero">1</button>
+        <button class="numero">2</button>
+        <button class="numero">3</button>
+        <button class="operador" data-operador="+">+</button>
+
+        <button id="cambiarSigno">±</button>
+        <button class="numero">0</button>
+        <button id="decimal">.</button>
+        <button id="igual">=</button>
+
+    </div>
+</div>
+
+<script>
+
+const resultado = document.getElementById("resultado");
+const operacion = document.getElementById("operacion");
+
+let numeroActual = "0";
+let numeroAnterior = null;
+let operador = null;
+let nuevoNumero = false;
+
+function mostrar() {
+    resultado.textContent = numeroActual;
+}
+
+document.querySelectorAll(".numero").forEach(boton => {
+    boton.onclick = () => {
+        if (nuevoNumero) {
+            numeroActual = boton.textContent;
+            nuevoNumero = false;
+        } else {
+            numeroActual = numeroActual === "0"
+                ? boton.textContent
+                : numeroActual + boton.textContent;
+        }
+
+        mostrar();
+    };
+});
+
+document.getElementById("decimal").onclick = () => {
+    if (nuevoNumero) {
+        numeroActual = "0.";
+        nuevoNumero = false;
+    } else if (!numeroActual.includes(".")) {
+        numeroActual += ".";
+    }
+
+    mostrar();
+};
+
+document.querySelectorAll(".operador").forEach(boton => {
+    boton.onclick = () => usarOperador(boton.dataset.operador);
+});
+
+function usarOperador(op) {
+
+    if (operador && !nuevoNumero) calcular();
+
+    numeroAnterior = parseFloat(numeroActual);
+    operador = op;
+    nuevoNumero = true;
+
+    operacion.textContent = numeroAnterior + " " + op;
+}
+
+document.getElementById("igual").onclick = () => {
+
+    if (operador === null) return;
+
+    calcular();
+
+    operador = null;
+    numeroAnterior = null;
+    operacion.textContent = "";
+};
+
+function calcular() {
+
+    let segundo = parseFloat(numeroActual);
+    let resultadoCalculo;
+
+    switch (operador) {
+        case "+": resultadoCalculo = numeroAnterior + segundo; break;
+        case "-": resultadoCalculo = numeroAnterior - segundo; break;
+        case "*": resultadoCalculo = numeroAnterior * segundo; break;
+        case "/":
+            if (segundo === 0) {
+                numeroActual = "Error";
+                mostrar();
+                return;
+            }
+            resultadoCalculo = numeroAnterior / segundo;
+            break;
+        case "%": resultadoCalculo = numeroAnterior % segundo; break;
+    }
+
+    numeroActual = String(resultadoCalculo);
+    nuevoNumero = true;
+    mostrar();
+}
+
+document.getElementById("limpiar").onclick = () => {
+    numeroActual = "0";
+    numeroAnterior = null;
+    operador = null;
+    nuevoNumero = false;
+    operacion.textContent = "";
+    mostrar();
+};
+
+document.getElementById("borrar").onclick = () => {
+    numeroActual = numeroActual.length > 1
+        ? numeroActual.slice(0, -1)
+        : "0";
+
+    mostrar();
+};
+
+document.getElementById("cambiarSigno").onclick = () => {
+    if (numeroActual !== "0") {
+        numeroActual = numeroActual.startsWith("-")
+            ? numeroActual.substring(1)
+            : "-" + numeroActual;
+
+        mostrar();
+    }
+};
+
+document.addEventListener("keydown", e => {
+
+    if (!isNaN(e.key)) {
+        document.querySelectorAll(".numero").forEach(boton => {
+            if (boton.textContent === e.key) boton.click();
+        });
+    }
+
+    if ("+-*/%".includes(e.key)) usarOperador(e.key);
+
+    if (e.key === "Enter" || e.key === "=")
+        document.getElementById("igual").click();
+
+    if (e.key === "Escape")
+        document.getElementById("limpiar").click();
+
+    if (e.key === "Backspace")
+        document.getElementById("borrar").click();
+
+    if (e.key === ".")
+        document.getElementById("decimal").click();
+});
+
+mostrar();
+
+</script>
+
+</body>
+</html>
